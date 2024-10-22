@@ -1,0 +1,81 @@
+SELECT
+    T1.DT_REFERENCIA competencia,
+    T1.CD_CONTA_CONTABIL CD_CONTA_CONTABIL,
+    T1.DS_CONTA_CONTABIL DS_CONTA_CONTABIL,
+    T1.DS_GRUPO_CONTA DS_GRUPO_CONTA,
+    T1.CD_CLASSIF_SEM_PONTO CD_CLASSIF_SEM_PONTO,
+    SUM(T1.VL_DEBITO) VL_DEBITO,
+    SUM(T1.VL_CREDITO) VL_CREDITO,
+    SUM(T1.VL_SALDO) VL_SALDO,
+    SUM(T1.VL_MOVIMENTO) VL_MOVIMENTO
+    
+FROM    Tasy.ctb_balancete_v T1
+
+WHERE 
+    ((T1.IE_NORMAL_ENCERRAMENTO = 'N' AND EXTRACT(MONTH FROM T1.DT_REFERENCIA) != 12)
+    OR (EXTRACT(MONTH FROM T1.DT_REFERENCIA) = 12 AND T1.IE_NORMAL_ENCERRAMENTO = 'E')) 
+    AND T1.DT_REFERENCIA >= TRUNC(SYSDATE, 'YEAR') AND T1.DT_REFERENCIA < ADD_MONTHS(TRUNC(SYSDATE, 'YEAR'), 12)
+    AND T1.CD_ESTABELECIMENTO = 2
+    AND Tasy.CTB_OBTER_SE_MES_FECHADO(T1.NR_SEQ_MES_REF, 2) = 'F'
+    AND CD_CONTA_CONTABIL IN (
+        44751,
+        44819,
+        44758,
+        44810,
+        40019,
+        44820,
+        44743,
+        44743,
+        44801,
+        46163,
+        44752,
+        44821,
+        44760,
+        44812,
+        44753,
+        44822,
+        44762,
+        44815,
+        44836,
+        44754,
+        44823,
+        44746,
+        44764,
+        40072,
+        44824,
+        43371,
+        44755,
+        44825,
+        44748,
+        44766,
+        44756,
+        44826,
+        44750,
+        44768,
+        45985,
+        45986,
+        45987,
+        45988,
+        46153,
+        44064,
+        44065,
+        44076,
+        44827,
+        44837,
+        44839,
+        44840,
+        46154,
+        46151,
+        44789,
+        44808)
+
+GROUP BY 
+T1.DT_REFERENCIA,
+T1.CD_CONTA_CONTABIL,
+T1.DS_CONTA_CONTABIL,
+T1.DS_GRUPO_CONTA,
+T1.CD_CLASSIF_SEM_PONTO
+
+ORDER BY 
+T1.DT_REFERENCIA,
+T1.CD_CLASSIF_SEM_PONTO
